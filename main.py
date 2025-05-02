@@ -1,12 +1,22 @@
-from fastapi import FastAPI 
+from fastapi import FastAPI
 from sqlalchemy import create_engine
 import pandas as pd
 import os
-from dotenv import load_dotenv  # 추가
+from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware  # ✅ CORS 미들웨어 추가
 
-load_dotenv()  # 추가
+load_dotenv()
 
 app = FastAPI()
+
+# ✅ CORS 설정: 필요한 경우 allow_origins=["https://your-frontend.com"] 로 제한 가능
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 전체 허용 (보안상 추후 프론트 주소로 제한 권장)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 환경변수에서 DB 연결 문자열 가져오기
 db_url = os.getenv("DATABASE_URL")
