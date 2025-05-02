@@ -33,3 +33,15 @@ def get_sales_summary(gu_name: str):
         return {"error": f"{gu_name} 자치구 데이터가 없습니다."}
     
     return df.iloc[0].to_dict()
+
+# ✅ 자치구별 당월 평균 매출 조회
+@app.get("/sales/monthly_avg/{gu_name}")
+def get_monthly_avg(gu_name: str):
+    query = "SELECT 자치구별_평균_매출 FROM seoul_sales_avg WHERE 자치구 = %s"
+    df = pd.read_sql(query, engine, params=(gu_name,))
+    if df.empty:
+        return {"error": f"{gu_name} 자치구 평균 매출 데이터가 없습니다."}
+    return {
+        "자치구": gu_name,
+        "당월_평균_매출": int(df.iloc[0]["자치구별_평균_매출"])
+    }

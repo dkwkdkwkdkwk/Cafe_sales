@@ -41,6 +41,9 @@ for gu in df["자치구"].unique():
 
 summary_df = pd.DataFrame(summary_rows)
 
+avg_sales_df = df.groupby("자치구")["당월_매출_금액"].mean().reset_index()
+avg_sales_df.rename(columns={"당월_매출_금액": "자치구별_평균_매출"}, inplace=True)
+
 # ▶️ 환경변수에서 DB URL 불러오기
 db_url = os.environ.get("DATABASE_URL")  # 로컬 실행 시 직접 .env 파일에 설정
 engine = create_engine(db_url)
