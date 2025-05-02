@@ -5,8 +5,8 @@ import os
 
 app = FastAPI()
 
-# 환경변수에서 DB 연결 문자열 가져오기 (Render에서 설정)
-db_url = os.getenv("DB_URL")
+# ✅ 환경변수에서 PostgreSQL 연결 URL 가져오기
+db_url = os.getenv("DATABASE_URL")
 engine = create_engine(db_url)
 
 @app.get("/sales/{gu_name}")
