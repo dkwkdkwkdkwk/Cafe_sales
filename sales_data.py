@@ -1,15 +1,18 @@
+import os
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
 
-# 1. 데이터 불러오기
+load_dotenv()
+
+
+# ▶️ CSV 파일 불러오기
 df = pd.read_csv("서울시매출데이터.csv", encoding="cp949")
 
-# 2. 자치구별 요약 데이터 만들기
+# ▶️ 자치구별 요약 데이터 생성
 summary_rows = []
-
 for gu in df["자치구"].unique():
     df_gu = df[df["자치구"] == gu]
-
     row = {
         "자치구": gu,
         "남성": df_gu["남성_매출_금액"].sum(),
@@ -34,15 +37,15 @@ for gu in df["자치구"].unique():
         "17_21": df_gu["시간대_17~21_매출_금액"].sum(),
         "21_24": df_gu["시간대_21~24_매출_금액"].sum()
     }
-
     summary_rows.append(row)
 
-# 3. 데이터프레임으로 변환
 summary_df = pd.DataFrame(summary_rows)
 
-# 4. PostgreSQL에 저장
-pg_url = "postgresql+psycopg2://sales_pg_k0dv_user:olys4FQutEuztu2BpoAz4YSETzBnuQoL@dpg-d0a9isggjchc73c3qr2g-a/sales_pg_k0dv"
-engine = create_engine(pg_url)
+# ▶️ 환경변수에서 DB URL 불러오기
+db_url = os.environ.get("DATABASE_URL")  # 로컬 실행 시 직접 .env 파일에 설정
+engine = create_engine(db_url)
+
+# ▶️ 테이블로 저장
 summary_df.to_sql("seoul_sales_summary", con=engine, if_exists="replace", index=False)
 
-print("✅ PostgreSQL에 저장 완료")
+print("✅ 요약 데이터를 DB에 저장 완료")
