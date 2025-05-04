@@ -1,0 +1,26 @@
+
+# 환경 변수 (절대 업로드 금지)
+.env
+
+# Python 캐시 파일들
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 가상환경 폴더
+venv/
+ENV/
+env/
+.venv/
+
+# IDE 설정
+.vscode/
+.idea/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+#사용 데이터
+json_Data/
